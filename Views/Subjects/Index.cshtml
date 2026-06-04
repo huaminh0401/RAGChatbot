@@ -1,0 +1,29 @@
+@model IEnumerable<Subject>
+@{ ViewData["Title"] = "Môn học"; var subjects = Model.ToList(); }
+<div class="topbar">
+  <div>
+    <div class="page-kicker">Subjects</div>
+    <h1 class="page-title">Quản lý môn học</h1>
+    <p class="page-subtitle">Tổ chức tài liệu theo môn học hoặc chuyên đề.</p>
+  </div>
+  <a class="btn-main" asp-action="Create">Thêm môn học</a>
+</div>
+
+<div class="panel">
+  @if (!subjects.Any()) {
+    <div class="empty">Chưa có môn học nào.</div>
+  } else {
+    <table class="table-modern">
+      <thead><tr><th>Tên môn học</th><th>Mô tả</th><th></th></tr></thead>
+      <tbody>
+      @foreach (var s in subjects) {
+        <tr>
+          <td><b>SUB @s.Name</b></td>
+          <td>@s.Description</td>
+          <td><span class="badge-soft">Active</span></td>
+        </tr>
+      }
+      </tbody>
+    </table>
+  }
+</div>

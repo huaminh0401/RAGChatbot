@@ -1,0 +1,56 @@
+@model IEnumerable<Document>
+@{ ViewData["Title"] = "Quản lý tài liệu"; var docs = Model.ToList(); }
+
+<section class="hero">
+  <div class="hero-icon"><span class="svg-icon i-book"></span></div>
+  <div>
+    <h1>Learning Materials Made Simple</h1>
+    <p>Upload tài liệu bài giảng, tự động chia chunk và chuẩn bị dữ liệu cho chatbot RAG.</p>
+  </div>
+</section>
+
+<div class="stat-grid-3">
+  <div class="stat-card-new"><div class="stat-round"><span class="svg-icon i-file"></span></div><div><div class="stat-label-new">Tài liệu</div><div class="stat-number">@docs.Count</div><div class="stat-desc">Tổng số tài liệu</div></div></div>
+  <div class="stat-card-new"><div class="stat-round"><span class="svg-icon i-cube"></span></div><div><div class="stat-label-new">Chunks</div><div class="stat-number">@docs.Sum(x => x.Chunks.Count)</div><div class="stat-desc">Đoạn dữ liệu đã chia</div></div></div>
+  <div class="stat-card-new"><div class="stat-round"><span class="svg-icon i-graduation"></span></div><div><div class="stat-label-new">Môn học</div><div class="stat-number">@docs.Select(x => x.Subject?.Name).Distinct().Count()</div><div class="stat-desc">Tổng số môn học</div></div></div>
+</div>
+
+<div class="panel">
+  @if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+  <div class="panel-head">
+    <h3 class="panel-title"><span class="svg-icon i-file"></span> Danh sách tài liệu</h3>
+    <div class="d-flex gap-2">
+      <a class="btn-soft" asp-controller="Research" asp-action="Index"><span class="svg-icon i-list"></span> Xem RBL</a>
+      <a class="btn-main" asp-action="Upload"><span class="svg-icon i-upload"></span> Upload tài liệu</a>
+    </div>
+  </div>
+  @if (!docs.Any()) {
+    <div class="empty">Chưa có tài liệu nào. Hãy upload file đầu tiên để bắt đầu.</div>
+  } else {
+    <table class="table-modern">
+      <thead><tr><th>Tên file</th><th>Môn học</th><th>Loại</th><th>Số chunk</th><th>Ngày upload</th><th>Thao tác</th></tr></thead>
+      <tbody>
+      @foreach (var d in docs) {
+        <tr>
+          <td><div class="file-cell"><div class="file-icon">@d.FileType.ToUpper()</div><b>@d.FileName</b></div></td>
+          <td>@d.Subject?.Name</td>
+          <td><span class="badge-soft">@d.FileType</span></td>
+          <td>@d.Chunks.Count</td>
+          <td>@d.UploadedAt.ToString("dd/MM/yyyy HH:mm")</td>
+          <td>
+            <div class="d-flex gap-2 flex-wrap">
+              <a class="btn-soft" asp-action="Details" asp-route-id="@d.Id"><span class="svg-icon i-eye"></span> Chi tiết</a>
+              <a class="btn-warning-soft" asp-action="Edit" asp-route-id="@d.Id"><span class="svg-icon i-edit"></span> Sửa</a>
+              <form asp-action="Delete" asp-route-id="@d.Id" method="post" onsubmit="return confirm('Bạn chắc chắn muốn xóa tài liệu này?');">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-danger-soft"><span class="svg-icon i-trash"></span> Xóa</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      }
+      </tbody>
+    </table>
+    <div class="pager"><div>Hiển thị <select><option>10</option></select> trên mỗi trang</div><div class="pager-buttons"><div class="page-btn">←</div><div class="page-btn active">1</div><div class="page-btn">→</div></div></div>
+  }
+</div>

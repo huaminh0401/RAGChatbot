@@ -1,0 +1,37 @@
+@model Document
+@{
+    ViewData["Title"] = "Sửa tài liệu";
+    var subjects = ViewBag.Subjects as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>;
+}
+
+<div class="topbar">
+  <div>
+    <div class="page-kicker">Document Management</div>
+    <h1 class="page-title">Sửa thông tin tài liệu</h1>
+    <p class="page-subtitle">Dùng khi nhập sai tên tài liệu hoặc muốn chuyển tài liệu sang môn học khác.</p>
+  </div>
+  <a class="btn-soft" asp-action="Details" asp-route-id="@Model.Id">Quay lại</a>
+</div>
+
+<div class="panel">
+  <form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+      <label asp-for="FileName" class="form-label fw-bold">Tên tài liệu</label>
+      <input asp-for="FileName" class="form-control" placeholder="Nhập tên tài liệu" />
+      <span asp-validation-for="FileName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-4">
+      <label asp-for="SubjectId" class="form-label fw-bold">Môn học</label>
+      <select asp-for="SubjectId" asp-items="subjects" class="form-select"></select>
+      <span asp-validation-for="SubjectId" class="text-danger"></span>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button class="btn-main" type="submit">Lưu thay đổi</button>
+      <a class="btn-soft" asp-action="Details" asp-route-id="@Model.Id">Hủy</a>
+    </div>
+  </form>
+</div>
