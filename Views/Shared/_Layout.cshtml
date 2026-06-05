@@ -18,46 +18,25 @@
             <b>EduRAG</b>
         </div>
 
-        <div class="offer-title">CHUC NANG</div>
+        <div class="offer-title">CHỨC NĂNG</div>
         <nav class="side-menu">
-            <a class="side-link" asp-controller="Documents" asp-action="Index"><span class="svg-icon i-file"></span>Tai lieu</a>
-            @if (User.IsInRole(UserRoles.Teacher) || User.IsInRole(UserRoles.Admin))
-            {
-                <a class="side-link" asp-controller="Documents" asp-action="Upload"><span class="svg-icon i-upload"></span>Upload</a>
-                <a class="side-link" asp-controller="Research" asp-action="Index"><span class="svg-icon i-database"></span>Research</a>
-            }
-            <a class="side-link" asp-controller="Chat" asp-action="Index"><span class="svg-icon i-chat"></span>Hoi dap</a>
-            @if (User.IsInRole(UserRoles.Admin))
-            {
-                <a class="side-link" asp-controller="Users" asp-action="Index"><span class="svg-icon i-user"></span>Users</a>
-            }
+            <a class="side-link" asp-controller="Documents" asp-action="Index"><span class="svg-icon i-file"></span>Tài liệu</a>
+            <a class="side-link" asp-controller="Documents" asp-action="Upload"><span class="svg-icon i-upload"></span>Upload</a>
+            <a class="side-link" asp-controller="Research" asp-action="Index"><span class="svg-icon i-database"></span>Research</a>
+            <a class="side-link" asp-controller="Chat" asp-action="Index"><span class="svg-icon i-chat"></span>Hỏi đáp</a>
         </nav>
 
         <div class="admin-box">
             <div class="admin-avatar"><span class="svg-icon i-user"></span></div>
-            @if (User.Identity?.IsAuthenticated == true)
-            {
-                <div><b>@User.Identity.Name</b><small>@(User.IsInRole(UserRoles.Admin) ? "Admin" : User.IsInRole(UserRoles.Teacher) ? "Teacher" : "Student")</small></div>
-                <form asp-controller="Auth" asp-action="Logout" method="post" class="ms-auto">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="logout-button">Logout</button>
-                </form>
-            }
-            else
-            {
-                <div><b>Guest</b><small>Chua dang nhap</small></div>
-                <a class="logout-button ms-auto" asp-controller="Auth" asp-action="Login">Login</a>
-            }
+            <div><b>Admin</b><small>Quản trị viên</small></div>
+            <span class="admin-arrow">⌄</span>
         </div>
 
-        <div class="collapse-box">&laquo; <span>Thu gon</span></div>
+        <div class="collapse-box">≪ <span>Thu gọn</span></div>
         <nav class="bottom-links">
-            <a asp-controller="Subjects" asp-action="Index">Mon hoc</a>
+            <a asp-controller="Subjects" asp-action="Index">Môn học</a>
             <a asp-controller="Documents" asp-action="Index">Dashboard</a>
-            @if (User.IsInRole(UserRoles.Teacher) || User.IsInRole(UserRoles.Admin))
-            {
-                <a asp-controller="Research" asp-action="Index">Research</a>
-            }
+            <a asp-controller="Research" asp-action="Index">Research</a>
             <a asp-controller="Chat" asp-action="Index">Chat</a>
         </nav>
     </aside>

@@ -1,12 +1,9 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RAGChatbotMVC.Data;
-using RAGChatbotMVC.Models;
 
 namespace RAGChatbotMVC.Controllers;
 
-[Authorize(Roles = UserRoles.TeacherAdmin)]
 public class ResearchController : Controller
 {
     private readonly AppDbContext _db;

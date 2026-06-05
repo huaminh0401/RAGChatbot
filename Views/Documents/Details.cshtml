@@ -1,12 +1,30 @@
 @model Document
 @{
-    ViewData["Title"] = "Chi tiet tai lieu";
+    ViewData["Title"] = "Chi tiết tài liệu";
 
     string GenerateChunkTitle(string content, int index)
     {
-        var text = (content ?? string.Empty).Trim();
-        if (text.Length == 0) return $"Doan noi dung {index}";
-        return text.Length > 72 ? text[..72] + "..." : text;
+        var t = (content ?? "").ToLower();
+
+        if (t.Contains("thánh gióng") && (t.Contains("ra đời") || t.Contains("mang thai")))
+            return "Thánh Gióng – Sự ra đời và tuổi thơ";
+
+        if (t.Contains("thánh gióng") && (t.Contains("đánh giặc") || t.Contains("ra trận") || t.Contains("giặc ân")))
+            return "Thánh Gióng – Ra trận và chiến thắng giặc Ân";
+
+        if (t.Contains("sơn tinh") && t.Contains("thủy tinh") && t.Contains("kén rể"))
+            return "Sơn Tinh Thủy Tinh – Cuộc kén rể";
+
+        if (t.Contains("sơn tinh") && t.Contains("thủy tinh"))
+            return "Sơn Tinh Thủy Tinh – Cuộc giao tranh";
+
+        if (t.Contains("tấm cám") && (t.Contains("đi hội") || t.Contains("hoàng hậu")))
+            return "Tấm Cám – Tấm đi hội và trở thành hoàng hậu";
+
+        if (t.Contains("tấm cám"))
+            return "Tấm Cám – Nhân vật và ý nghĩa truyện";
+
+        return $"Đoạn nội dung {index}";
     }
 }
 @if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
@@ -14,34 +32,28 @@
   <div>
     <div class="page-kicker">Document Detail</div>
     <h1 class="page-title">@Model.FileName</h1>
-    <p class="page-subtitle">Mon hoc: @Model.Subject?.Name - Upload: @Model.UploadedAt.ToString("dd/MM/yyyy HH:mm")</p>
+    <p class="page-subtitle">Môn học: @Model.Subject?.Name • Upload: @Model.UploadedAt.ToString("dd/MM/yyyy HH:mm")</p>
   </div>
   <div class="d-flex gap-2 flex-wrap">
-    <a class="btn-soft" asp-action="Index">Danh sach</a>
-    @if (User.IsInRole(UserRoles.Teacher) || User.IsInRole(UserRoles.Admin))
-    {
-      <a class="btn-soft" asp-action="Edit" asp-route-id="@Model.Id">Sua ten</a>
-    }
-    @if (User.IsInRole(UserRoles.Admin))
-    {
-      <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Ban chac chan muon xoa tai lieu nay?');">
-        @Html.AntiForgeryToken()
-        <button type="submit" class="btn-danger-soft">Xoa</button>
-      </form>
-    }
+    <a class="btn-soft" asp-action="Index">Danh sách</a>
+    <a class="btn-soft" asp-action="Edit" asp-route-id="@Model.Id">Sửa tên</a>
+    <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Bạn chắc chắn muốn xóa tài liệu này?');">
+      @Html.AntiForgeryToken()
+      <button type="submit" class="btn-danger-soft">Xóa</button>
+    </form>
   </div>
 </div>
 
 <div class="stat-grid">
-  <div class="stat-card"><div class="stat-icon">DOC</div><div class="stat-label">Loai file</div><div class="stat-value">@Model.FileType</div></div>
-  <div class="stat-card"><div class="stat-icon">CHUNK</div><div class="stat-label">So chunk</div><div class="stat-value">@Model.Chunks.Count</div></div>
+  <div class="stat-card"><div class="stat-icon">DOC</div><div class="stat-label">Loại file</div><div class="stat-value">@Model.FileType</div></div>
+  <div class="stat-card"><div class="stat-icon">CHUNK</div><div class="stat-label">Số chunk</div><div class="stat-value">@Model.Chunks.Count</div></div>
   <div class="stat-card"><div class="stat-icon">AI</div><div class="stat-label">Embedding</div><div class="stat-value">@Model.Chunks.Sum(c => c.Embeddings.Count)</div></div>
-  <div class="stat-card"><div class="stat-icon">OK</div><div class="stat-label">Trang thai</div><div class="stat-value">Done</div></div>
+  <div class="stat-card"><div class="stat-icon">OK</div><div class="stat-label">Trạng thái</div><div class="stat-value">Done</div></div>
 </div>
 
 <div class="panel">
   <div class="panel-head">
-    <h3 class="panel-title">Cac chunk da tao</h3>
+    <h3 class="panel-title">Các chunk đã tạo</h3>
     <span class="badge-soft">RAG Context</span>
   </div>
 
@@ -51,10 +63,12 @@
       <div class="chunk-modern-header">
         <div>
           <h3>@GenerateChunkTitle(c.Content, c.ChunkOrder ?? 0)</h3>
-          <span>Doan @c.ChunkOrder - Page: @(c.PageNumber?.ToString() ?? "N/A")</span>
+          <span>Đoạn @c.ChunkOrder • Page: @(c.PageNumber?.ToString() ?? "N/A")</span>
         </div>
+
         <div class="chunk-tag">Chunk</div>
       </div>
+
       <div class="chunk-modern-content">
         @c.Content
       </div>
