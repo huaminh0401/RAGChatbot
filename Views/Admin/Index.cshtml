@@ -1,0 +1,62 @@
+@model IEnumerable<RAGChatbotMVC.Models.User>
+@{
+    ViewData["Title"] = "Quản lý tài khoản";
+}
+
+<div class="topbar">
+  <div>
+    <div class="page-kicker">Admin</div>
+    <h1 class="page-title">Quản lý tài khoản</h1>
+    <p class="page-subtitle">Duyệt tài khoản mới, phân quyền Admin/Teacher/Student, khóa hoặc xóa tài khoản.</p>
+  </div>
+</div>
+
+<div class="panel">
+  @if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+  @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
+
+  <table class="table-modern">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Email</th>
+        <th>Họ tên</th>
+        <th>Role</th>
+        <th>Duyệt</th>
+        <th>Trạng thái</th>
+        <th>Ngày tạo</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var user in Model)
+      {
+        <tr>
+          <td>@user.Id</td>
+          <td><b>@user.Email</b></td>
+          <td>@user.FullName</td>
+          <td><span class="badge-soft">@user.Role</span></td>
+          <td>@(user.IsApproved ? "Đã duyệt" : "Chờ duyệt")</td>
+          <td>@(user.IsLocked ? "Khóa" : "Hoạt động")</td>
+          <td>@user.CreatedAt.ToString("dd/MM/yyyy")</td>
+          <td>
+            <div class="d-flex gap-2 flex-wrap">
+              @if (!user.IsApproved)
+              {
+                <form asp-action="Approve" asp-route-id="@user.Id" method="post">
+                  @Html.AntiForgeryToken()
+                  <button type="submit" class="btn-main">Duyệt</button>
+                </form>
+              }
+              <a asp-action="Edit" asp-route-id="@user.Id" class="btn-warning-soft">Sửa</a>
+              <form asp-action="Delete" asp-route-id="@user.Id" method="post" onsubmit="return confirm('Xóa tài khoản này?');">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-danger-soft">Xóa</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

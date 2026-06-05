@@ -1,0 +1,82 @@
+@model RAGChatbotMVC.Controllers.ResearchDashboard
+@{ ViewData["Title"] = "RBL Benchmark"; var rows = Model.Models; var chunks = Model.Chunks; }
+
+<section class="hero">
+  <div class="hero-icon"><span class="svg-icon i-chart"></span></div>
+  <div>
+    <h1>Research Benchmark<br />Made Clear</h1>
+    <p>So sánh RAG với fine-tuned model, embedding models, chunking strategy và chỉ số thử nghiệm tiêu chuẩn RAGAS.</p>
+  </div>
+</section>
+
+<div class="panel">
+  <div class="panel-head"><h3 class="panel-title"><span class="svg-icon i-scale"></span> RAG vs Fine-tuned Model</h3><span class="badge-soft">AI RBL</span></div>
+  <table class="table-modern">
+    <thead><tr><th>Tiêu chí</th><th>RAG</th><th>Fine-tuned model</th></tr></thead>
+    <tbody>
+      <tr><td>Dữ liệu mới</td><td>Chỉ cần upload/index lại tài liệu</td><td>Thường cần train lại</td></tr>
+      <tr><td>Citation</td><td>Có thể trích dẫn chunk nguồn</td><td>Khó biết câu trả lời đến từ đâu</td></tr>
+      <tr><td>Chi phí demo</td><td>Phù hợp với dung tài liệu và embedding</td><td>Cao hơn do cần dataset/train</td></tr>
+      <tr><td>Use case</td><td>Hỏi đáp tài liệu, môn học</td><td>Tối ưu phong cách hoặc tác vụ cố định</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="research-grid">
+  <div class="panel">
+    <div class="panel-head"><h3 class="panel-title"><span class="svg-icon i-cube"></span> Benchmark embedding models</h3><span class="badge-soft">Mock Embedding</span></div>
+    @if (!rows.Any()) {
+      <div class="empty">Chưa có dữ liệu benchmark. Hãy upload tài liệu trước.</div>
+    } else {
+      <table class="table-modern">
+        <thead><tr><th>Model</th><th>Tổng vector</th><th>Thời gian TB</th><th>Kích thước vector</th><th>Faithfulness</th><th>Answer relevancy</th></tr></thead>
+        <tbody>
+        @foreach (var r in rows) {
+          <tr>
+            <td><b>@r.ModelName</b></td>
+            <td>@r.TotalVectors</td>
+            <td>@r.AvgProcessingMs.ToString("0.000") ms</td>
+            <td>@r.AvgVectorJsonSize.ToString("0") chars</td>
+            <td>@r.Faithfulness.ToString("0.00")</td>
+            <td>@r.AnswerRelevancy.ToString("0.00")</td>
+          </tr>
+        }
+        </tbody>
+      </table>
+      <p class="text-muted mt-3 small">Faithfulness và Answer relevancy hiện là chỉ số mô phỏng để demo pipeline RAGAS.</p>
+    }
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><h3 class="panel-title"><span class="svg-icon i-file"></span> Benchmark chunking strategy</h3><span class="badge-soft">Chunk size hiện tại: 160 words</span></div>
+    @if (!chunks.Any()) {
+      <div class="empty">Chưa có chunk nào để đánh giá.</div>
+    } else {
+      <table class="table-modern">
+        <thead><tr><th>Tài liệu</th><th>Số chunk</th><th>Ký tự TB/chunk</th><th>Từ TB/chunk</th><th>Nhận xét</th></tr></thead>
+        <tbody>
+        @foreach (var c in chunks) {
+          <tr>
+            <td><b>@VietnameseText.ForDisplay(c.DocumentName)</b></td>
+            <td>@c.TotalChunks</td>
+            <td>@c.AvgCharacters</td>
+            <td>@c.AvgWords</td>
+            <td><span class="badge-soft">Ổn cho demo retrieval</span></td>
+          </tr>
+        }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head"><h3 class="panel-title"><span class="svg-icon i-target"></span> Quy trình RAG benchmark</h3><span class="badge-soft">Workflow</span></div>
+  <div class="flow">
+    <div class="flow-step"><div class="emoji"><span class="svg-icon i-database"></span></div><div><b>DATA</b><span>Test set 50 câu hỏi + đáp án chuẩn</span></div></div>
+    <div class="flow-step"><div class="emoji"><span class="svg-icon i-grid"></span></div><div><b>CHUNK</b><span>Chunking so sánh size/overlap</span></div></div>
+    <div class="flow-step"><div class="emoji"><span class="svg-icon i-cube"></span></div><div><b>MODEL</b><span>Embedding 4 model tham khảo</span></div></div>
+    <div class="flow-step"><div class="emoji"><span class="svg-icon i-chat"></span></div><div><b>ASK</b><span>Retrieve Top K context</span></div></div>
+    <div class="flow-step"><div class="emoji"><span class="svg-icon i-chart"></span></div><div><b>RAGAS</b><span>Score Faithfulness, relevancy</span></div></div>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+@model RAGChatbotMVC.Models.User
+@{
+    ViewData["Title"] = "Sửa quyền";
+}
+
+<div class="topbar">
+  <div>
+    <div class="page-kicker">Admin</div>
+    <h1 class="page-title">Chỉnh sửa tài khoản</h1>
+    <p class="page-subtitle">@Model.Email</p>
+  </div>
+  <a asp-action="Index" class="btn-soft">Quay lại</a>
+</div>
+
+<div class="panel" style="max-width:760px">
+  <form method="post">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+      <label class="form-label fw-bold">Role</label>
+      <select name="role" class="form-select">
+        <option value="Student" selected="@(Model.Role == "Student")">Student</option>
+        <option value="Teacher" selected="@(Model.Role == "Teacher")">Teacher</option>
+        <option value="Admin" selected="@(Model.Role == "Admin")">Admin</option>
+      </select>
+    </div>
+    <div class="form-check mb-3">
+      <input type="checkbox" name="isApproved" class="form-check-input" value="true" @(Model.IsApproved ? "checked" : "") />
+      <label class="form-check-label">Đã duyệt tài khoản</label>
+    </div>
+    <div class="form-check mb-4">
+      <input type="checkbox" name="isLocked" class="form-check-input" value="true" @(Model.IsLocked ? "checked" : "") />
+      <label class="form-check-label">Khóa tài khoản</label>
+    </div>
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn-main">Lưu</button>
+      <a asp-action="Index" class="btn-soft">Hủy</a>
+    </div>
+  </form>
+</div>

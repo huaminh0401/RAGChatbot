@@ -1,0 +1,35 @@
+@model RAGChatbotMVC.Models.User
+@{
+    ViewData["Title"] = "Trang cá nhân";
+    var displayName = string.IsNullOrWhiteSpace(Model.FullName) ? Model.Email : Model.FullName;
+}
+
+<div class="topbar">
+  <div>
+    <div class="page-kicker">Profile</div>
+    <h1 class="page-title">Trang cá nhân</h1>
+    <p class="page-subtitle">Thông tin tài khoản đang đăng nhập.</p>
+  </div>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card"><div class="stat-icon">USER</div><div><div class="stat-label">Họ tên</div><div class="stat-value">@displayName</div></div></div>
+  <div class="stat-card"><div class="stat-icon">ROLE</div><div><div class="stat-label">Vai trò</div><div class="stat-value">@Model.Role</div></div></div>
+  <div class="stat-card"><div class="stat-icon">LOCK</div><div><div class="stat-label">Trạng thái</div><div class="stat-value">@(Model.IsLocked ? "Đã khóa" : "Hoạt động")</div></div></div>
+</div>
+
+<div class="panel" style="max-width:760px">
+  <div class="panel-head">
+    <h3 class="panel-title">Thông tin chi tiết</h3>
+    <span class="badge-soft">@Model.Role</span>
+  </div>
+  <table class="table-modern">
+    <tbody>
+      <tr><th>Họ tên</th><td>@displayName</td></tr>
+      <tr><th>Email</th><td>@Model.Email</td></tr>
+      <tr><th>Vai trò</th><td>@Model.Role</td></tr>
+      <tr><th>Ngày tạo</th><td>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td></tr>
+      <tr><th>Trạng thái</th><td>@(Model.IsLocked ? "Đã khóa" : "Hoạt động")</td></tr>
+    </tbody>
+  </table>
+</div>

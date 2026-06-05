@@ -1,0 +1,25 @@
+@model Subject
+@{ ViewData["Title"] = "Thêm môn học"; }
+
+<div class="topbar">
+  <div>
+    <div class="page-kicker">Create Subject</div>
+    <h1 class="page-title">Thêm môn học mới</h1>
+    <p class="page-subtitle">Môn học dùng để phân loại tài liệu trong hệ thống.</p>
+  </div>
+  <a class="btn-soft" asp-action="Index">Quay lại</a>
+</div>
+
+<div class="panel" style="max-width:760px">
+  <form asp-action="Create" method="post">
+    <div class="mb-3">
+      <label class="form-label fw-bold">Tên môn học</label>
+      <input asp-for="Name" class="form-control" placeholder="Ví dụ: Software Engineering" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label fw-bold">Mô tả</label>
+      <textarea asp-for="Description" class="form-control" rows="5" placeholder="Nhập mô tả ngắn..."></textarea>
+    </div>
+    <button class="btn-main">Lưu môn học</button>
+  </form>
+</div>

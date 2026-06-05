@@ -1,0 +1,96 @@
+@model DocumentUploadViewModel
+@{ ViewData["Title"] = "Upload tài liệu"; }
+
+<section class="hero">
+  <div class="hero-icon"><span class="svg-icon i-upload"></span></div>
+  <div>
+    <h1>Upload tài liệu bài giảng</h1>
+    <p>Hỗ trợ PDF, DOCX, PPTX, TXT. Sau khi upload, hệ thống sẽ trích xuất text, chia chunk và tạo embedding demo.</p>
+  </div>
+</section>
+
+<form asp-action="Upload" method="post" enctype="multipart/form-data" id="uploadForm" accept-charset="UTF-8">
+  <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+  <input asp-for="OriginalFileName" type="hidden" id="OriginalFileName" />
+  <div class="upload-layout">
+    <div class="upload-card">
+      <div class="upload-drop" id="dropZone">
+        <div class="upload-cloud"><span class="svg-icon i-upload"></span></div>
+        <h3>Kéo & thả file vào đây</h3>
+        <p class="text-muted mb-2">hoặc</p>
+        <label class="choose-file-btn" for="File"><span class="svg-icon i-file"></span> Chọn file từ máy tính</label>
+        <input asp-for="File" id="File" type="file" class="file-input-hidden" accept=".pdf,.docx,.pptx,.txt" />
+        <div class="text-muted small">Hỗ trợ: PDF, DOCX, PPTX, TXT<br />Kích thước tối đa: 50MB</div>
+        <span asp-validation-for="File" class="text-danger mt-2 d-block" id="fileError"></span>
+      </div>
+      <div class="selected-file">
+        <b>File đã chọn</b>
+        <div class="file-preview mt-2" id="filePreview">
+          <div class="d-flex align-items-center gap-3"><div class="pdf-icon">FILE</div><div><b id="fileName">Chưa chọn file</b><br><small class="text-muted" id="fileSize">Vui lòng chọn PDF, DOCX, PPTX hoặc TXT</small></div></div>
+          <button type="button" class="btn-danger-soft py-2 px-3" id="clearFile"><span class="svg-icon i-trash"></span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-card">
+      <label class="form-label fw-bold">Chọn môn học có sẵn</label>
+      <select asp-for="SubjectId" asp-items="Model.Subjects" class="form-select mb-3">
+        <option value="">-- Chọn môn học --</option>
+      </select>
+      <span asp-validation-for="SubjectId" class="text-danger"></span>
+
+      <label class="form-label fw-bold">Hoặc nhập môn học mới</label>
+      <input asp-for="NewSubjectName" class="form-control mb-3" placeholder="Ví dụ: Software Engineering" />
+
+      <div class="step-card"><div class="step-icon"><span class="svg-icon i-user"></span></div><div><b>Step 1</b><span>Upload tài liệu gốc<br />Chọn và tải lên file tài liệu bài giảng.</span></div></div>
+      <div class="step-card"><div class="step-icon"><span class="svg-icon i-file"></span></div><div><b>Step 2</b><span>Trích xuất và chia nội dung<br />Hệ thống sẽ trích xuất text và chia nhỏ thành các chunk.</span></div></div>
+      <div class="step-card"><div class="step-icon"><span class="svg-icon i-cube"></span></div><div><b>Step 3</b><span>Tạo vector embedding<br />Tạo vector embedding demo cho từng chunk.</span></div></div>
+      <button class="btn-main w-100 mt-2" type="submit"><span class="svg-icon i-upload"></span> Upload và xử lý tài liệu</button>
+    </div>
+  </div>
+</form>
+
+<div class="note-box">
+  <div class="note-icon"><span class="svg-icon i-info"></span></div>
+  <div>
+    <b>Lưu ý</b>
+    <ul class="mb-0 mt-2 text-muted">
+      <li>File sẽ được lưu vào SQL Server.</li>
+      <li>Thời gian xử lý phụ thuộc vào dung lượng tài liệu.</li>
+      <li>Bạn có thể theo dõi trạng thái trong phần Dashboard.</li>
+    </ul>
+  </div>
+</div>
+
+@section Scripts{
+<script>
+const fileInput = document.getElementById('File');
+const originalFileName = document.getElementById('OriginalFileName');
+const fileName = document.getElementById('fileName');
+const fileSize = document.getElementById('fileSize');
+const fileError = document.getElementById('fileError');
+const clearFile = document.getElementById('clearFile');
+const dropZone = document.getElementById('dropZone');
+const allowed = ['pdf','docx','pptx','txt'];
+function formatSize(bytes){ if(!bytes) return ''; const mb = bytes/1024/1024; return mb >= 1 ? mb.toFixed(2)+' MB' : (bytes/1024).toFixed(1)+' KB'; }
+function setFiles(files){ if(files && files.length){ fileInput.files = files; validateFile(fileInput.files[0]); } }
+function validateFile(file){
+  if(!file){ originalFileName.value=''; fileName.textContent='Chưa chọn file'; fileSize.textContent='Vui lòng chọn PDF, DOCX, PPTX hoặc TXT'; fileError.textContent=''; return false; }
+  originalFileName.value = file.name;
+  const ext = file.name.split('.').pop().toLowerCase();
+  if(!allowed.includes(ext)){
+    fileError.textContent = 'File không đúng định dạng. Chỉ hỗ trợ PDF, DOCX, PPTX, TXT.';
+    fileName.textContent = file.name;
+    fileSize.textContent = 'Định dạng không hợp lệ';
+    return false;
+  }
+  fileError.textContent=''; fileName.textContent=file.name; fileSize.textContent=formatSize(file.size); return true;
+}
+fileInput.addEventListener('change', e => validateFile(e.target.files[0]));
+clearFile.addEventListener('click', () => { fileInput.value=''; validateFile(null); });
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.background='#f3f9e8'; });
+dropZone.addEventListener('dragleave', () => dropZone.style.background='#fdfef9');
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.style.background='#fdfef9'; setFiles(e.dataTransfer.files); });
+document.getElementById('uploadForm').addEventListener('submit', e => { if(!validateFile(fileInput.files[0])) e.preventDefault(); });
+</script>
+}

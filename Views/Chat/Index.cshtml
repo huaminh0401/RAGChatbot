@@ -1,0 +1,100 @@
+@model ChatAskViewModel
+@{ ViewData["Title"] = "Chat & Hỏi đáp"; }
+
+<section class="hero">
+  <div class="hero-icon"><span class="svg-icon i-chat"></span></div>
+  <div>
+    <h1>Ask Your Documents</h1>
+    <p>Đặt câu hỏi theo ngữ cảnh hội thoại, truy xuất chunk liên quan và hiển thị nguồn tham khảo từ tài liệu đã upload.</p>
+  </div>
+</section>
+
+@if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+
+<div class="panel">
+  <div class="panel-head">
+    <h3 class="panel-title"><span class="svg-icon i-chat"></span> Đặt câu hỏi</h3>
+    <span class="badge-soft">A2 Chat RAG</span>
+  </div>
+  <form asp-action="Ask" method="post">
+    <div class="mb-3">
+      <label asp-for="Question" class="form-label fw-bold">Câu hỏi</label>
+      <textarea asp-for="Question" class="form-control" rows="4" placeholder="Ví dụ: Chunk trong RAG là gì?"></textarea>
+      <span asp-validation-for="Question" class="text-danger"></span>
+    </div>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label asp-for="SubjectId" class="form-label fw-bold">Lọc theo môn học</label>
+        <select asp-for="SubjectId" asp-items="Model.Subjects" class="form-select">
+          <option value="">Tất cả môn học</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label asp-for="ModelName" class="form-label fw-bold">Embedding model</label>
+        <select asp-for="ModelName" class="form-select">
+          <option value="bge-m3">bge-m3</option>
+          <option value="multilingual-e5-base">multilingual-e5-base</option>
+          <option value="text-embedding-3-small">text-embedding-3-small</option>
+          <option value="PhoBERT-base">PhoBERT-base</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label asp-for="TopK" class="form-label fw-bold">Top K chunk</label>
+        <input asp-for="TopK" type="number" min="1" max="8" class="form-control" />
+      </div>
+    </div>
+    <button class="btn-main mt-3" type="submit"><span class="svg-icon i-send"></span> Hỏi chatbot</button>
+  </form>
+</div>
+
+@if (Model.Result != null)
+{
+  <div class="panel">
+    <div class="panel-head"><h3 class="panel-title">Câu trả lời</h3><span class="badge-soft">Có citation</span></div>
+    <div class="chunk-card"><b>Q:</b> @Model.Result.Question</div>
+    <div class="answer-box">@Model.Result.Answer</div>
+
+    <h4 class="mt-4 mb-3">Nguồn tài liệu được truy xuất</h4>
+    <table class="table-modern">
+      <thead><tr><th>#</th><th>Tài liệu</th><th>Môn học</th><th>Score</th><th>Preview</th></tr></thead>
+      <tbody>
+      @for (var i = 0; i < Model.Result.Sources.Count; i++)
+      {
+        var s = Model.Result.Sources[i];
+        <tr>
+          <td>[@(i + 1)] Chunk @s.ChunkOrder</td>
+          <td><b>@VietnameseText.ForDisplay(s.DocumentName)</b></td>
+          <td>@VietnameseText.ForDisplay(s.SubjectName)</td>
+          <td>@s.Score.ToString("0.000")</td>
+          <td>@s.Preview</td>
+        </tr>
+      }
+      </tbody>
+    </table>
+  </div>
+}
+
+<div class="panel">
+  <div class="panel-head">
+    <h3 class="panel-title"><span class="svg-icon i-history"></span> Lịch sử hội thoại</h3>
+    <form asp-action="ClearHistory" method="post">
+      @Html.AntiForgeryToken()
+      <button class="btn-danger-soft" type="submit"><span class="svg-icon i-trash"></span> Xóa lịch sử</button>
+    </form>
+  </div>
+  @if (!Model.History.Any())
+  {
+    <div class="empty"><div class="chat-empty-icon"><span class="svg-icon i-empty"></span></div><b>Chưa có câu hỏi nào trong phiên hiện tại.</b><br />Hãy đặt câu hỏi để bắt đầu trò chuyện với tài liệu của bạn.</div>
+  }
+  else
+  {
+    @foreach (var h in Model.History)
+    {
+      <div class="chunk-card">
+        <b>@h.AskedAt.ToString("dd/MM/yyyy HH:mm")</b><br />
+        <span class="text-muted">Q: @h.Question</span>
+        <p class="mt-2 mb-0">@h.Answer</p>
+      </div>
+    }
+  }
+</div>
