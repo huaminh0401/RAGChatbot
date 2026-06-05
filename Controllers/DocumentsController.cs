@@ -4,8 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using RAGChatbotMVC.Data;
 using RAGChatbotMVC.Models;
 using RAGChatbotMVC.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RAGChatbotMVC.Controllers;
+
+[Authorize]
 
 public class DocumentsController : Controller
 {

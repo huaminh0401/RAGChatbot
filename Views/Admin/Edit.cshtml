@@ -1,0 +1,23 @@
+﻿@model RAGChatbotMVC.Models.User
+@{
+    ViewData["Title"] = "Sửa quyền";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Chỉnh sửa quyền cho @Model.Email</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label>Role</label>
+        <select name="role" class="form-control">
+            <option value="User" selected="@(Model.Role == "User")">User</option>
+            <option value="Admin" selected="@(Model.Role == "Admin")">Admin</option>
+        </select>
+    </div>
+    <div class="form-group form-check">
+        <input type="checkbox" name="isLocked" class="form-check-input" value="true" @(Model.IsLocked ? "checked" : "") />
+        <label class="form-check-label">Khóa tài khoản</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>
