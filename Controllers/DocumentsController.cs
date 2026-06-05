@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using RAGChatbotMVC.Services;
 
 namespace RAGChatbotMVC.Controllers;
 
+[Authorize(Roles = UserRoles.StudentTeacherAdmin)]
 public class DocumentsController : Controller
 {
     private readonly AppDbContext _db;
@@ -25,12 +27,14 @@ public class DocumentsController : Controller
         return View(docs);
     }
 
+    [Authorize(Roles = UserRoles.TeacherAdmin)]
     public async Task<IActionResult> Upload()
     {
         await EnsureDefaultSubject();
         return View(new DocumentUploadViewModel { Subjects = await SubjectOptions() });
     }
 
+    [Authorize(Roles = UserRoles.TeacherAdmin)]
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Upload(DocumentUploadViewModel vm)
     {
@@ -95,6 +99,7 @@ public class DocumentsController : Controller
         return doc == null ? NotFound() : View(doc);
     }
 
+    [Authorize(Roles = UserRoles.TeacherAdmin)]
     public async Task<IActionResult> Edit(int id)
     {
         var doc = await _db.Documents.FindAsync(id);
@@ -103,6 +108,7 @@ public class DocumentsController : Controller
         return View(doc);
     }
 
+    [Authorize(Roles = UserRoles.TeacherAdmin)]
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, Document input)
     {
@@ -135,6 +141,7 @@ public class DocumentsController : Controller
         return RedirectToAction(nameof(Details), new { id = doc.Id });
     }
 
+    [Authorize(Roles = UserRoles.Admin)]
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
