@@ -1,0 +1,44 @@
+@model LoginViewModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Login";
+}
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login - EduRAG</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/site.css" rel="stylesheet" asp-append-version="true">
+</head>
+<body class="auth-page">
+    <main class="auth-card">
+        <div class="brand-row auth-brand">
+            <div class="brand-mark">ER</div>
+            <b>EduRAG</b>
+        </div>
+        <h1>Dang nhap</h1>
+        
+
+        <form asp-action="Login" method="post" class="auth-form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ReturnUrl" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <label>
+                <span>Email hoac username</span>
+                <input asp-for="UserNameOrEmail" class="form-control" autocomplete="username" />
+                <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
+            </label>
+            <label>
+                <span>Mat khau</span>
+                <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </label>
+            <button type="submit" class="btn-main w-100">Login</button>
+        </form>
+
+        
+    </main>
+</body>
+</html>

@@ -1,20 +1,23 @@
 @model IEnumerable<Subject>
-@{ ViewData["Title"] = "Môn học"; var subjects = Model.ToList(); }
+@{ ViewData["Title"] = "Mon hoc"; var subjects = Model.ToList(); }
 <div class="topbar">
   <div>
     <div class="page-kicker">Subjects</div>
-    <h1 class="page-title">Quản lý môn học</h1>
-    <p class="page-subtitle">Tổ chức tài liệu theo môn học hoặc chuyên đề.</p>
+    <h1 class="page-title">Quan ly mon hoc</h1>
+    <p class="page-subtitle">To chuc tai lieu theo mon hoc hoac chuyen de.</p>
   </div>
-  <a class="btn-main" asp-action="Create">Thêm môn học</a>
+  @if (User.IsInRole(UserRoles.Teacher) || User.IsInRole(UserRoles.Admin))
+  {
+    <a class="btn-main" asp-action="Create">Them mon hoc</a>
+  }
 </div>
 
 <div class="panel">
   @if (!subjects.Any()) {
-    <div class="empty">Chưa có môn học nào.</div>
+    <div class="empty">Chua co mon hoc nao.</div>
   } else {
     <table class="table-modern">
-      <thead><tr><th>Tên môn học</th><th>Mô tả</th><th></th></tr></thead>
+      <thead><tr><th>Ten mon hoc</th><th>Mo ta</th><th></th></tr></thead>
       <tbody>
       @foreach (var s in subjects) {
         <tr>

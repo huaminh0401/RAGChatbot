@@ -10,6 +10,8 @@ public class AppDbContext : DbContext
     public DbSet<Document> Documents => Set<Document>();
     public DbSet<DocumentChunk> DocumentChunks => Set<DocumentChunk>();
     public DbSet<EmbeddingResearch> EmbeddingResearch => Set<EmbeddingResearch>();
+    public DbSet<ApplicationUser> ApplicationUsers => Set<ApplicationUser>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -17,6 +19,20 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Document>().ToTable("Documents");
         modelBuilder.Entity<DocumentChunk>().ToTable("DocumentChunks");
         modelBuilder.Entity<EmbeddingResearch>().ToTable("EmbeddingResearch");
+        modelBuilder.Entity<ApplicationUser>().ToTable("ApplicationUsers");
+        modelBuilder.Entity<RefreshToken>().ToTable("RefreshTokens");
+
+        modelBuilder.Entity<ApplicationUser>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+
+        modelBuilder.Entity<ApplicationUser>()
+            .HasIndex(u => u.UserName)
+            .IsUnique();
+
+        modelBuilder.Entity<RefreshToken>()
+            .HasIndex(t => t.TokenHash)
+            .IsUnique();
 
         modelBuilder.Entity<Document>()
             .HasOne(d => d.Subject)
@@ -34,6 +50,12 @@ public class AppDbContext : DbContext
             .HasOne(e => e.Chunk)
             .WithMany(c => c.Embeddings)
             .HasForeignKey(e => e.ChunkId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<RefreshToken>()
+            .HasOne(t => t.ApplicationUser)
+            .WithMany(u => u.RefreshTokens)
+            .HasForeignKey(t => t.ApplicationUserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

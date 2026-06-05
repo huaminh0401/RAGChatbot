@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using RAGChatbotMVC.Services;
 
 namespace RAGChatbotMVC.Controllers;
 
+[Authorize(Roles = UserRoles.StudentTeacherAdmin)]
 public class ChatController : Controller
 {
     private const string HistoryKey = "RagChatHistory";
