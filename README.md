@@ -1,10 +1,10 @@
-# 🤖 RAG Chatbot - Hệ Thống Trợ Lý Ảo Thông Minh Trích Xuất Dữ Liệu Nội Bộ (ASP.NET Core MVC)
+#  RAG Chatbot - Hệ Thống Trợ Lý Ảo Thông Minh Trích Xuất Dữ Liệu Nội Bộ (ASP.NET Core MVC)
 
 Dự án này là một hệ thống **RAG Chatbot** được xây dựng hoàn toàn bằng **C#** trên nền tảng **.NET 10.0**, áp dụng mô hình kiến trúc chuẩn **ASP.NET Core MVC**. Hệ thống cho phép người dùng nạp tài liệu nội bộ của doanh nghiệp và thực hiện tìm kiếm ngữ cảnh, hỏi đáp thông minh thông qua giao diện Web trực quan. Dự án tích hợp mô hình nhúng đa ngôn ngữ **multilingual-e5-base** cục bộ đảm bảo an toàn thông tin và lưu trữ dữ liệu tập trung trên **Microsoft SQL Server**.
 
 ---
 
-## 🏗️ Kiến Trúc Hệ Thống & Mô Hình MVC
+##  Kiến Trúc Hệ Thống & Mô Hình MVC
 
 Hệ thống được tổ chức theo mô hình **MVC** kết hợp chặt chẽ với **Kiến trúc phân lớp (Layered Architecture)** để tách biệt rõ ràng mã nguồn giao diện, logic nghiệp vụ AI và truy xuất cơ sở dữ liệu:
 
@@ -23,7 +23,9 @@ Nằm tại lớp giao diện chính, đảm nhận luồng tương tác của n
 
 ---
 
-## 📂 Cấu Trúc Thư Mục Giải Pháp (.NET MVC Solution)
+##  Cấu Trúc Thư Mục Giải Pháp (.NET MVC Solution)
+<img width="1216" height="1293" alt="image" src="https://github.com/user-attachments/assets/1a88e0fc-2825-4163-bf6a-af5261ad064a" />
+
 
 Mã nguồn được tổ chức thành các thư mục dự án (`.csproj`) tách biệt nhằm hiện thực hóa sơ đồ kiến trúc hệ thống:
 
@@ -69,7 +71,7 @@ Database ORM: Entity Framework Core (Microsoft.EntityFrameworkCore.SqlServer).
 Database: Microsoft SQL Server.
 
 
-🚀 Hướng Dẫn Cài Đặt & Chạy Thử
+ Hướng Dẫn Cài Đặt & Chạy Thử
 Điều kiện tiên quyết
 Đã cài đặt .NET 10.0 SDK.
 
@@ -98,8 +100,8 @@ Sau khi chạy, mở trình duyệt và truy cập http://localhost:5000. Giao d
 
 
 
-🤝 Đóng Góp Phát Triển
+ Đóng Góp Phát Triển
 Mọi ý kiến đóng góp nhằm tối ưu hóa việc binding dữ liệu giữa Controller và View hoặc cải thiện tốc độ xử lý của lớp Business AI đều được hoan nghênh. Vui lòng gửi một Pull Request hoặc mở một Issue.
 
-📄 Giấy Phép (License)
+ Giấy Phép (License)
 Dự án này được cấp phép theo Giấy phép MIT - xem file LICENSE để biết thêm chi tiết.
