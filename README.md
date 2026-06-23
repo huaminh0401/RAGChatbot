@@ -41,6 +41,7 @@ Mã nguồn được tổ chức thành các thư mục dự án (`.csproj`) tá
 │   │
 │   ├── 📄 RAGChatbot.Business/           # 2. Class Library (Business Layer)
 │   │   ├── 📁 Services/                 # ChatService.cs, RagEngine.cs
+│   │   ├── 📁 Helper/                
 │   │   └── 📁 Interfaces/               # IChatService.cs, IEmbeddingEngine.cs
 │   │
 │   └── 📄 RAGChatbot.DataAccess/         # 3. Class Library (Data Access Layer)
