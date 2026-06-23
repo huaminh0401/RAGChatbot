@@ -80,4 +80,26 @@ File mô hình multilingual-e5-base.onnx đặt tại thư mục chỉ định t
 
 Các bước cài đặt
 1. Clone dự án:
-   -git clone
+   -git clone https://github.com/huaminh0401/RAGChatbot.git
+   cd RAGChatbot
+
+2. Cấu hình ứng dụng (appsettings.json):
+Mở file src/RAGChatbotMVC.Web/appsettings.json và cập nhật thông tin chuỗi kết nối SQL Server cùng đường dẫn Model:
+
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=MSI;Database=RAG_Research_DB;Trusted_Connection=True;TrustServerCertificate=True;"
+  },
+
+
+3. Khởi chạy ứng dụng Web MVC:
+  - dotnet run --project src/RAGChatbot.Web
+Sau khi chạy, mở trình duyệt và truy cập http://localhost:5000. Giao diện Web MVC (Razor View) sẽ xuất hiện, cho phép bạn tải lên tài liệu trực tiếp và thực hiện trò chuyện với chatbot ngay trên trình duyệt.
+
+
+
+🤝 Đóng Góp Phát Triển
+Mọi ý kiến đóng góp nhằm tối ưu hóa việc binding dữ liệu giữa Controller và View hoặc cải thiện tốc độ xử lý của lớp Business AI đều được hoan nghênh. Vui lòng gửi một Pull Request hoặc mở một Issue.
+
+📄 Giấy Phép (License)
+Dự án này được cấp phép theo Giấy phép MIT - xem file LICENSE để biết thêm chi tiết.
